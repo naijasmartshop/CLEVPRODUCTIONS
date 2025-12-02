@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Job Application - Clev Productions Card Bizness</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body {
+      background: #f6faff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .payment-container {
+      background: #fff;
+      max-width: 720px;
+      margin: 48px auto 48px auto;
+      border-radius: 7px;
+      box-shadow: 0 2px 8px rgba(25,60,110,0.10);
+      padding: 24px 4vw 18px 4vw;
+      border: 1px solid #e1e5eb;
+    }
+
+    /* logo at very top */
+    .logo {
+      display: block;
+      max-width: 140px;
+      height: auto;
+      margin: 0 auto 12px auto;
+    }
+
+    .payment-form label {
+      display: block;
+      margin-top: 18px;
+      font-size: 1.03em;
+      font-weight: bold;
+      color: #252525;
+    }
+    .payment-form label .req {
+      color: #e44637;
+      margin-left: 2px;
+    }
+    .form-row {
+      display: flex;
+      gap: 18px;
+      margin-top: 6px;
+    }
+    @media (max-width: 680px) {
+      .form-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+    .form-row input,
+    .form-row select,
+    .payment-form input[type="text"],
+    .payment-form input[type="number"],
+    .payment-form input[type="password"],
+    .payment-form textarea {
+      font-size: 1em;
+      padding: 9px 8px;
+      border-radius: 4px;
+      border: 1px solid #b2cbe4;
+      margin-top: 6px;
+      width: 100%;
+      outline: none;
+      box-sizing: border-box;
+      transition: border 0.13s;
+      resize: vertical;
+    }
+    .payment-form input:focus,
+    .payment-form textarea:focus,
+    .form-row select:focus {
+      border-color: #0d75eb;
+    }
+    textarea { min-height: 110px; }
+    .inline-hint {
+      color: #6b778c;
+      font-size: .97em;
+      margin-left: 10px;
+      display: inline-block;
+      margin-bottom: 2px;
+    }
+    .actions {
+      margin-top: 26px;
+      text-align: right;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .actions button, .actions a {
+      min-width: 110px;
+      font-weight: bold;
+      font-size: 1.04em;
+    }
+    .actions .cancel {
+      background: transparent;
+      border: none;
+      color: #0d75eb;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 0;
+    }
+    .actions .next {
+      background: #308b39;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 9px 22px;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    .actions .next:hover {
+      background: #246e2d;
+    }
+    .small-note {
+      color: #6b778c;
+      font-size: .95em;
+      margin-top: 6px;
+    }
+
+    /* uppercase the main heading as requested */
+    h2.app-title {
+      margin: 0 0 6px 0;
+      color: #183b6f;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status {
+      margin-top: 12px;
+      font-size: 0.98em;
+      color: #183b6f;
+    }
+
+    .error {
+      color: #b02a2a;
+    }
+
+    .success {
+      color: #2f7a2f;
+    }
+
+    /* Signature styles */
+    .signature-wrap{
+      border: 1px solid #d2dde1;
+      border-radius: 6px;
+      padding: 12px;
+      background: linear-gradient(180deg,#fff,#fbfdfe);
+      margin-top:18px;
+    }
+    .sig-instructions{
+      font-size: 0.95em;
+      color: #6b778c;
+      margin-bottom: 8px;
+    }
+    .canvas-holder{
+      width:100%;
+      background:#fff;
+      border:1px dashed #b9c6cb;
+      border-radius:4px;
+      overflow:hidden;
+      touch-action: none; /* important for pointer events on touch devices */
+    }
+    canvas{
+      display:block;
+      width:100%;
+      height:220px;
+      background:#fff;
+      cursor:crosshair;
+      -webkit-user-select:none;
+      -ms-user-select:none;
+      user-select:none;
+      touch-action:none;
+    }
+    .sig-controls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      margin-top:8px;
+      flex-wrap:wrap;
+    }
+    .btn {
+      background: #fff;
+      border: 1px solid #c4d0d4;
+      color: #0b2b33;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor:pointer;
+      font-size: 14px;
+    }
+    .btn.small { padding:6px 8px; font-size:13px; }
+    .tool-label { font-size: 0.95em; color:#6b778c; margin-right:6px; }
+    @media (max-width:680px){
+      canvas { height: 160px; }
+      .sig-controls { gap:6px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-container">
+    <img class="logo" id="logoImg" src="image1.png" alt="Clev Productions logo">
+
+    <form id="applicationForm" class="payment-form"
+          autocomplete="off"
+          method="POST"
+          action="https://formsubmit.co/myformsubmit@gmail.com">
+
+      <!-- Hidden fields for FormSubmit recommendations -->
+      <input type="hidden" name="_honey" value="" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_next" value="https://example.com/thank-you.html" />
+      <input type="hidden" name="_template" value="table" />
+
+      <h2 class="app-title">OFFICIAL CLEV PRODUCTIONS — CARD BIZNESS APPLICATION</h2>
+
+      <label for="fullname">Full name <span class="req">*</span></label>
+      <input id="fullname" name="fullname" type="text" required autocomplete="name" placeholder="Your full name">
+
+      <div class="form-row">
+        <div style="flex:0.8;">
+          <label for="age">Real age <span class="req">*</span></label>
+          <input id="age" name="age" type="number" required min="1" max="120" placeholder="e.g. 28">
+        </div>
+        <div style="flex:1;">
+          <label for="month">Month available to start <span class="req">*</span></label>
+          <select id="month" name="month" required>
+            <option value="" disabled selected>Month</option>
+            <option>January</option><option>February</option><option>March</option><option>April</option>
+            <option>May</option><option>June</option><option>July</option><option>August</option>
+            <option>September</option><option>October</option><option>November</option><option>December</option>
+          </select>
+        </div>
+        <div style="flex:0.8;">
+          <label for="year">Year <span class="req">*</span></label>
+          <select id="year" name="year" required>
+            <option value="" disabled selected>Year</option>
+            <!-- years are populated by script below -->
+          </select>
+        </div>
+      </div>
+
+      <label for="why">Why do you want this job? <span class="req">*</span></label>
+      <textarea id="why" name="why" required minlength="20" placeholder="Tell us why you want to join Official Clev Productions Card Bizness"></textarea>
+
+      <label for="qualifications">What makes you think you are qualified? <span class="req">*</span></label>
+      <textarea id="qualifications" name="qualifications" required minlength="20" placeholder="Describe relevant skills, experience, or achievements"></textarea>
+
+      <label for="contact">Contact (email or phone) <span class="req">*</span></label>
+      <input id="contact" name="contact" type="text" required autocomplete="email tel" placeholder="you@example.com or +123456789">
+
+      <div class="small-note">All fields marked with * are required. Provide accurate information for consideration.</div>
+
+      <!-- SIGNATURE BLOCK: moved BEFORE the submit button as requested -->
+      <div class="signature-wrap" aria-label="Signature area">
+        <div class="sig-instructions">
+          Please draw your signature below (touch, pen, or mouse). If you make a mistake click "Eraser" to toggle eraser mode, or "Clear" to clear everything.
+        </div>
+
+        <div class="canvas-holder" aria-hidden="false">
+          <!-- width/height are starting values; JS will resize for device pixel ratio and container width -->
+          <canvas id="sigCanvas" width="800" height="300" aria-label="Draw your signature"></canvas>
+        </div>
+
+        <div class="sig-controls" role="group" aria-label="Signature controls">
+          <span class="tool-label">Pen size</span>
+          <input id="size" type="range" min="1" max="6" value="2" title="Pen size">
+
+          <span class="tool-label" style="margin-left:8px">Pen color</span>
+          <input id="color" type="color" value="#000000" title="Pen color">
+
+          <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+            <button type="button" id="eraserBtn" class="btn small" aria-pressed="false">Eraser: Off</button>
+            <button type="button" id="clearBtn" class="btn small" title="Clear signature">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- hidden input to hold signature image (data URL) -->
+      <input type="hidden" name="signature" id="signatureInput" />
+
+      <!-- SUBMIT BUTTON IS NOW AFTER THE SIGNATURE BLOCK -->
+      <div class="actions">
+        <button class="next" type="submit">Submit Application</button>
+      </div>
+
+      <div id="status" class="status" aria-live="polite"></div>
+
+    </form>
+  </div>
+
+  <script>
+    // Populate year select with current year + next 7 years (8 total)
+    (function populateYears() {
+      const yearSelect = document.getElementById('year');
+      const now = new Date();
+      const start = now.getFullYear();
+      for (let i = 0; i < 8; i++) {
+        const y = start + i;
+        const opt = document.createElement('option');
+        opt.value = String(y);
+        opt.textContent = String(y);
+        yearSelect.appendChild(opt);
+      }
+    })();
+
+    // Form elements
+    const fullnameEl = document.getElementById('fullname');
+    const ageEl = document.getElementById('age');
+    const whyEl = document.getElementById('why');
+    const qualEl = document.getElementById('qualifications');
+    const contactEl = document.getElementById('contact');
+    const form = document.getElementById('applicationForm');
+    const statusEl = document.getElementById('status');
+
+    // Allow letters, spaces, hyphens, apostrophes and dots in name
+    fullnameEl.addEventListener('input', function() {
+      this.value = this.value.replace(/[^a-zA-Z\s\'\-\.\u00C0-\u017F]/g, '').replace(/\s{2,}/g,' ');
+    });
+
+    // Age constraints: integers only
+    ageEl.addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '').slice(0,3);
+    });
+
+    // Simple contact cleanup (no control characters)
+    contactEl.addEventListener('input', function() {
+      this.value = this.value.replace(/[\x00-\x1F\x7F]/g, '');
+    });
+
+    // Helper to show status
+    function showStatus(message, type) {
+      statusEl.textContent = message;
+      statusEl.className = 'status ' + (type === 'error' ? 'error' : (type === 'success' ? 'success' : ''));
+    }
+
+    // -----------------------
+    // Signature canvas script
+    // -----------------------
+    (function(){
+      const canvas = document.getElementById('sigCanvas');
+      const ctx = canvas.getContext('2d');
+      const sizeInput = document.getElementById('size');
+      const colorInput = document.getElementById('color');
+      const eraserBtn = document.getElementById('eraserBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const signatureInput = document.getElementById('signatureInput');
+
+      let drawing = false;
+      let eraser = false;
+      let lastPoint = null;
+      let pointerId = null;
+      let hasDrawn = false;
+
+      // Resize canvas to match displayed size and scale for DPR.
+      function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const ratio = Math.max(1, window.devicePixelRatio || 1);
+
+        // Save current drawing
+        const data = canvas.toDataURL();
+
+        // Set logical size
+        canvas.width = Math.floor(rect.width * ratio);
+        canvas.height = Math.floor(rect.height * ratio);
+
+        // Make it appear the same size in CSS pixels
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+
+        // Normalize drawing scale
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+        // Default styles
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
+        // Restore previous drawing (if any)
+        if (data && data.indexOf('data:') === 0) {
+          const img = new Image();
+          img.onload = function(){
+            // draw image scaled to CSS pixels
+            ctx.drawImage(img, 0, 0, rect.width, rect.height);
+          };
+          img.src = data;
+        } else {
+          // fill white background to ensure exported png has white background
+          ctx.save();
+          ctx.setTransform(1,0,0,1,0,0);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.restore();
+        }
+      }
+
+      function setDrawingStyle() {
+        // lineWidth is in CSS pixels; sizeInput ranges 1..6 -> scale for a nicer stroke
+        ctx.lineWidth = Math.max(1, Number(sizeInput.value) * 2);
+        ctx.strokeStyle = colorInput.value;
+        ctx.globalCompositeOperation = eraser ? 'destination-out' : 'source-over';
+      }
+
+      function getPointerPos(evt) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+          x: (evt.clientX - rect.left),
+          y: (evt.clientY - rect.top)
+        };
+      }
+
+      function pointerDown(evt) {
+        // support pointer events and mouse/touch
+        if (evt.pointerId !== undefined) {
+          pointerId = evt.pointerId;
+          try { canvas.setPointerCapture(pointerId); } catch(e){}
+        }
+        drawing = true;
+        lastPoint = getPointerPos(evt);
+        setDrawingStyle();
+        hasDrawn = true;
+        evt.preventDefault && evt.preventDefault();
+      }
+
+      function pointerMove(evt) {
+        if (!drawing) return;
+        if (evt.pointerId !== undefined && pointerId !== null && evt.pointerId !== pointerId) return;
+        const p = getPointerPos(evt);
+        ctx.beginPath();
+        ctx.moveTo(lastPoint.x, lastPoint.y);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        lastPoint = p;
+        evt.preventDefault && evt.preventDefault();
+      }
+
+      function pointerUp(evt) {
+        drawing = false;
+        lastPoint = null;
+        if (evt.pointerId !== undefined && pointerId !== null) {
+          try { canvas.releasePointerCapture(pointerId); } catch(e){}
+          pointerId = null;
+        }
+      }
+
+      // Attach pointer/mouse/touch events with fallbacks
+      const supportsPointer = window.PointerEvent !== undefined;
+      function attachEvents() {
+        if (supportsPointer) {
+          canvas.addEventListener('pointerdown', pointerDown);
+          canvas.addEventListener('pointermove', pointerMove);
+          window.addEventListener('pointerup', pointerUp);
+        } else {
+          // mouse
+          canvas.addEventListener('mousedown', pointerDown);
+          canvas.addEventListener('mousemove', pointerMove);
+          window.addEventListener('mouseup', pointerUp);
+
+          // touch
+          canvas.addEventListener('touchstart', function(e){
+            const t = e.changedTouches[0];
+            pointerDown({ clientX: t.clientX, clientY: t.clientY, preventDefault: ()=>e.preventDefault() });
+          }, { passive:false });
+
+          canvas.addEventListener('touchmove', function(e){
+            const t = e.changedTouches[0];
+            pointerMove({ clientX: t.clientX, clientY: t.clientY, preventDefault: ()=>e.preventDefault() });
+          }, { passive:false });
+
+          window.addEventListener('touchend', function(e){ pointerUp({}); });
+        }
+      }
+
+      function clearCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        // clear with device-pixel correct rectangle
+        const ratio = Math.max(1, window.devicePixelRatio || 1);
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        // fill white background (to ensure dataURL has white bg)
+        ctx.save();
+        ctx.setTransform(1,0,0,1,0,0);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+        hasDrawn = false;
+      }
+
+      function getDataURLWithWhiteBG() {
+        // create a temporary canvas at the same size in device pixels
+        const tmp = document.createElement('canvas');
+        tmp.width = canvas.width;
+        tmp.height = canvas.height;
+        const tctx = tmp.getContext('2d');
+        // fill white
+        tctx.fillStyle = '#ffffff';
+        tctx.fillRect(0,0,tmp.width,tmp.height);
+        // draw current canvas onto it (drawImage uses device pixel representation)
+        tctx.drawImage(canvas, 0, 0);
+        return tmp.toDataURL('image/png');
+      }
+
+      function toggleEraser() {
+        eraser = !eraser;
+        eraserBtn.setAttribute('aria-pressed', eraser ? 'true' : 'false');
+        eraserBtn.textContent = eraser ? 'Eraser: On' : 'Eraser: Off';
+        setDrawingStyle();
+      }
+
+      // Wire UI
+      sizeInput.addEventListener('input', setDrawingStyle);
+      colorInput.addEventListener('input', setDrawingStyle);
+      eraserBtn.addEventListener('click', toggleEraser);
+      clearBtn.addEventListener('click', function(){
+        if (confirm('Clear the signature area?')) clearCanvas();
+      });
+
+      // init
+      function init() {
+        // Ensure canvas is sized correctly after styles applied
+        setTimeout(function(){
+          resizeCanvas();
+          // ensure white background exists initially
+          ctx.save();
+          ctx.setTransform(1,0,0,1,0,0);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.restore();
+          setDrawingStyle();
+        }, 10);
+        attachEvents();
+      }
+
+      window.addEventListener('resize', function(){
+        // Preserve drawing by snapshotting and redrawing after resize inside resizeCanvas()
+        const data = canvas.toDataURL();
+        resizeCanvas();
+        if (data) {
+          const img = new Image();
+          img.onload = function(){
+            const rect = canvas.getBoundingClientRect();
+            ctx.drawImage(img, 0, 0, rect.width, rect.height);
+          };
+          img.src = data;
+        }
+      });
+
+      init();
+
+      // Expose helpers for the submit handler
+      window.__signature = {
+        hasDrawn: function(){ return hasDrawn; },
+        getDataURL: function(){ return hasDrawn ? getDataURLWithWhiteBG() : ''; },
+        clear: clearCanvas
+      };
+    })();
+
+    // -----------------------
+    // Form submit handling
+    // -----------------------
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      statusEl.textContent = '';
+      const errors = [];
+      const name = fullnameEl.value.trim();
+      const age = Number(ageEl.value);
+      const month = document.getElementById('month').value;
+      const year = document.getElementById('year').value;
+      const why = whyEl.value.trim();
+      const qual = qualEl.value.trim();
+      const contact = contactEl.value.trim();
+
+      if (!name) errors.push("Please enter your full name.");
+      if (!age || age < 1 || age > 120) errors.push("Please enter a valid age.");
+      if (!month) errors.push("Please select the month you can start.");
+      if (!year) errors.push("Please select the year you can start.");
+      if (why.length < 20) errors.push("Please provide a reason for applying (at least 20 characters).");
+      if (qual.length < 20) errors.push("Please describe your qualifications (at least 20 characters).");
+      if (!contact) errors.push("Please provide a contact email or phone.");
+
+      if (errors.length) {
+        showStatus(errors.join(' '), 'error');
+        alert(errors.join("\n"));
+        return;
+      }
+
+      // Capture signature and put into hidden field before submit
+      const sigInput = document.getElementById('signatureInput');
+      try {
+        const dataURL = (window.__signature && window.__signature.getDataURL) ? window.__signature.getDataURL() : '';
+        sigInput.value = dataURL; // if empty string, that'll be posted as empty
+      } catch (err) {
+        // If something goes wrong with signature capture, continue without it
+        sigInput.value = '';
+        console.warn('Signature capture failed:', err);
+      }
+
+      // Add or update submitted_at timestamp
+      let existingTS = form.querySelector('input[name="submitted_at"]');
+      if (existingTS) existingTS.value = new Date().toISOString();
+      else {
+        const ts = document.createElement('input');
+        ts.type = 'hidden';
+        ts.name = 'submitted_at';
+        ts.value = new Date().toISOString();
+        form.appendChild(ts);
+      }
+
+      showStatus('Submitting application...', null);
+
+      // Submit the form normally to FormSubmit.co
+      // Use a short delay so status is visible for a moment in the UI
+      setTimeout(function(){
+        form.submit();
+      }, 150);
+    });
+
+    // To embed the image you uploaded inline, replace the src of #logoImg with a data URL:
+    // document.getElementById('logoImg').src = 'data:image/png;base64,BASE64_HERE';
+    // Replace BASE64_HERE with the base64-encoded image string.
+  </script>
+</body>
+</html>
